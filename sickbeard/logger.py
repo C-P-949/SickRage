@@ -189,8 +189,10 @@ class Logger(object):  # pylint: disable=too-many-instance-attributes
         message = '%s :: %s' % (cur_thread, msg)
 
         # Change the SSL error to a warning with a link to information about how to fix it.
+        # Check for u'error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:590)'
         check = re.sub(r'error \[Errno 1\] _ssl.c:\d{3}: error:\d{8}:SSL routines:SSL23_GET_SERVER_HELLO:tlsv1 alert internal error', 'See: http://git.io/vuU5V', message)
-        if check != message:
+        check2 = re.sub(r'error \[SSL: SSLV3_ALERT_HANDSHAKE_FAILURE\] sslv3 alert handshake failure \(_ssl.c:\d{3}\)', 'See: http://git.io/vuU5V', message)
+        if check != message or check2 != message:
             message = check
             level = WARNING
 
